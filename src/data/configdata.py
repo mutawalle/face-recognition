@@ -59,4 +59,4 @@ def camera_use():
 #     cv.waitKey(0)
 # cv.destroyAllWindows()
 
-camera_use()
+# camera_use()
