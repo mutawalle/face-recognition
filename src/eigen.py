@@ -38,15 +38,15 @@ import numpy as np
 #     return Vecjumlah
 
 int_img = []
-contol.Parser('./test/pins_Adriana/*.jpg')
+int_img = contol.Parser('./test/pins_Adriana/*.jpg')
 
 
 MATRIX = [[0 for i in range(256)] for j in range (256)]
 
 def jumlahMatrix(M1, M2):
-    M = [[0 for i in range(256)] for j in range(256)]
-    for i in range (256):
-        for j in range(256):
+    M = [[0 for i in range(len(M1))] for j in range(len(M2))]
+    for i in range (len(M1)):
+        for j in range(len(M1)):
             M[i][j] = M1[i][j] + M2[i][j]
     return M
 
@@ -58,15 +58,15 @@ def displayMatrix (M):
 
 def kaliMatrix (M1, M2):
     M = [[0 for i in range (len(M1))]for j in range(len(M2))]
-    for i in range (256):
-        for j in range (256):
-            for k in range (256):
+    for i in range (len(M1)):
+        for j in range (len(M1)):
+            for k in range (len(M1)):
                 M[i][j] += M1[i][k] * M2[k][j]
     return M
 
 def kaliMatrixWithConst (const, M):
-    for i in range(0, 256):
-        for j in range (0, 256):
+    for i in range(0, len(M)):
+        for j in range (0, len(M)):
             M[i][j] *= const
 
 def penguranganMatrix (M1, M2):
@@ -78,7 +78,7 @@ def penguranganMatrix (M1, M2):
 
 
 def meanMatrix (Dataset):
-    M = [[0 for i in range(256)] for j in range(256)]
+    M = [[0 for i in range(len(Dataset[0]))] for j in range(len(Dataset[0]))]
     for i in range (len(Dataset)):
         M = jumlahMatrix(M,Dataset[i])
     # displayMatrix(M)
@@ -103,25 +103,29 @@ def Tranpose (M):
 
 def Covarian (Dataset):
     # MATRIX = [[0 for i in range(256)] for j in range (256)]
-    DataSelisih =  [MATRIX for i in range(len(Dataset))]
-    DataSelisih = selisihDenganMean(Dataset)
-    DataSelisihTranpose = [MATRIX for i in range(len(Dataset))]
-    perkalian = [MATRIX for i in range(len(Dataset))]
-
-    for i in range(len(DataSelisih)):
-        DataSelisihTranpose[i] = Tranpose(DataSelisih[i])
-
+    AVG = meanMatrix(Dataset)
+    Cov = []
     for i in range(len(Dataset)):
-        perkalian[i] = kaliMatrix(DataSelisih[i], DataSelisihTranpose[i])
+        X = penguranganMatrix(Dataset[i], AVG)
+        Cov.append(kaliMatrix(X, Tranpose(X)))
 
-    Cov = meanMatrix(perkalian)
+    Cov = meanMatrix(Covarian)
 
     return Cov
 
-X = meanMatrix(int_img)
-X = np.array(X, dtype= np.uint8)
-cv.imshow("kontol", X)
-cv.waitKey(0)
+# M1 = [[(i+1) for i in range(3)] for j in range(3)]
+# M2 = [[(i+j) for i in range(3)] for j in range(3)]
+# M3 = [[(i+3*j) for i in range(3)] for j in range(3)]
+# displayMatrix(M1)
+# displayMatrix(M2)
+# print(M2 + M1)
+# displayMatrix(M3)
+# fak = [M1, M2, M3]
+# X = Covarian(int_img)
+# displayMatrix(X)
+# X = np.array(X, dtype= np.uint8)
+# cv.imshow("kontol", X)
+# cv.waitKey(0)
 
 
 

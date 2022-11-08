@@ -8,9 +8,10 @@ import datetime
 ImagePath= './test/pins_Adriana/*.jpg'
 
 cv_img = []
-int_img= []
+
 
 def Parser(path):
+    int_img= []
     DirPath = os.path.abspath(path)
     print(DirPath)
     File= glob.glob(DirPath)
@@ -20,6 +21,7 @@ def Parser(path):
         cv_img.append(img_resize)
         grayscale_img= cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
         int_img.append(grayscale_img)
+    return int_img
 
 def camera_use():
     cam= cv.VideoCapture(0) #Start Camera
