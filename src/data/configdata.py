@@ -25,8 +25,8 @@ def camera_use():
     cam= cv.VideoCapture(0) #Start Camera
     cv.namedWindow("Camera") #Windows Title
     img_counter= 0
-    while True:
-        k= cv.waitKey(1) #Key
+    end= False
+    while  not end:
         total_time= 100
         while total_time>=10:
             ret, frame= cam.read()
@@ -34,22 +34,22 @@ def camera_use():
                 print("Failed to proccess..")
                 break
             cv.imshow("Display", frame) #Showing camera
-            cv.waitKey(125)
             total_time-=1
+            if(cv.waitKey(125) == ord('q')):
+                end= True
+                break
         else:
             ret, frame= cam.read()
             cv.imshow("Display", frame)
             img_name= "{}/cap_cam_{}.jpg".format('./test/get_data', img_counter) #Image Name
             cv.imwrite(img_name, frame)
             print("Data Taken")
-            cv.waitKey(125)
             img_counter+=1
-        user_input= int(input("press 1 to continue or press 0 to end\n"))
-        if(user_input == 0):
-            print("Closing camera..")
-            break
+            if(cv.waitKey(125) == ord('q')):
+                end= True
+                break
     cam.release() #Release Camera
-    # cam.destroyAllWindows() #Close All Opened Windows
+    cv.destroyAllWindows() #Close All Opened Windows
 
 # Parser(ImagePath)
 
