@@ -1,0 +1,159 @@
+<Root>:
+    GridLayout:
+        cols: 1
+        canvas:
+            Color: 
+                rgba: 235/255, 235/255, 235/255, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        size: root.size
+        pos: root.pos
+        
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: (1,.15)
+            Label:
+                text: "Face Recognition"
+                font_size: 36
+                font_name: 'fonts/Poppins-Black.ttf'
+                color: 190/255, 18/255, 60/255, 1
+        BoxLayout:
+            orientation: "horizontal"
+            padding: 10
+            FloatLayout:
+                size_hint: (.5, 1)
+                size: root.width, root.height
+                BoxLayout:
+                    orientation: "vertical"
+                    pos_hint: {"center_x": .5, "y": .8}
+                    size_hint: (None,None)
+                    size: (135, 70)
+                    Label:
+                        text: "Input Path Dataset"
+                        font_name: 'fonts/Poppins-Medium.ttf'
+                        font_size: 12
+                        color: 15/255, 23/255, 42/255, 1
+                    TextInput:
+                        background_normal: "assets/background_textbox.png"
+                        background_active: "assets/background_textbox.png"
+                        foreground_color: 15/255,15/255,15/255,1
+                        font_name: 'fonts/Poppins-Medium.ttf'
+                        multiline: False
+                Button:
+                    pos_hint: {"center_x": .5, "y": .6}
+                    size_hint: (None, None)
+                    size: (120,40)
+                    text: "Choose File"
+                    font_size: 14
+                    font_name: 'fonts/Poppins-SemiBold.ttf'
+                    background_color: 0,0,0,0
+                    background_normal: ""
+                    canvas.before:
+                        Color: 
+                            rgba: 2/255,132/255,199/255,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [15]
+                    on_release: root.show_load()
+                Label:
+                    text: "Or"
+                    pos_hint: {"center_x": .5, "y": 0.05}
+                    font_size: 14
+                    font_name: 'fonts/Poppins-Black.ttf'
+                    color: 50/255,50/255,50/255,1
+                Button:
+                    pos_hint: {"center_x": .5, "y": .4}
+                    size_hint: (None, None)
+                    size: (120,40)
+                    text: "Open Camera"
+                    font_size: 14
+                    font_name: 'fonts/Poppins-SemiBold.ttf'
+                    background_color: 0,0,0,0
+                    background_normal: ""
+                    canvas.before:
+                        Color: 
+                            rgba: 2/255,132/255,199/255,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [15]
+                Button:
+                    pos_hint: {"center_x": .5, "y": .2}
+                    size_hint: (None, None)
+                    size: (120,40)
+                    text: "Check"
+                    font_name: 'fonts/Poppins-SemiBold.ttf'
+                    background_color: 0,0,0,0
+                    background_normal: ""
+                    canvas.before:
+                        Color: 
+                            rgba: 22/255,163/255,74/255,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [15]
+                    
+            GridLayout: 
+                cols: 2
+                FloatLayout:
+                    BoxLayout:
+                        orientation: "vertical"
+                        pos_hint: {"center_x": .4,"y": .3}
+                        size_hint: (None, None)
+                        size: (256, 256)
+                        Image:
+                            id: test_image
+                            source: "assets/blank_image.png"
+                            FloatLayout:
+                                size_hint: (None, None)
+                                size: (256, 256)
+                                Image:
+                                    pos_hint: {"x": 1.142,"y": .525}
+                                    source: "assets/border_radius.png"
+                    Label:
+                        pos_hint: {"center_x": .4,"y": -0.25}
+                        text: "Test Image"
+                        font_size: 18
+                        font_name: 'fonts/Poppins-Bold.ttf'
+                        color: 50/255,50/255,50/255,1
+                FloatLayout:
+                    BoxLayout:
+                        orientation: "vertical"
+                        pos_hint: {"center_x": .45,"y": .3}
+                        size_hint: (None, None)
+                        size: (256, 256)
+                        Image:
+                            id: result_image
+                            source: "assets/blank_image.png"
+                            FloatLayout:
+                                size_hint: (None, None)
+                                size: (256, 256)
+                                Image:
+                                    pos_hint: {"x": 2.344,"y": .525}
+                                    source: "assets/border_radius.png"
+                    Label:
+                        pos_hint: {"center_x": .45,"y": -0.25}
+                        text: "Result Image"
+                        font_size: 18
+                        font_name: 'fonts/Poppins-Bold.ttf'
+                        color: 50/255,50/255,50/255,1
+                        
+                    
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            path: "./"
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.selection)
