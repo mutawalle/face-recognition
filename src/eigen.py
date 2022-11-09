@@ -2,6 +2,7 @@
 import data.configdata as contol
 import cv2 as cv
 import numpy as np
+from scipy.linalg import hessenberg
 
 
 # def Mat2vec (Matrix):
@@ -112,6 +113,18 @@ def Covarian (Dataset):
     Cov = meanMatrix(Covarian)
 
     return Cov
+
+def eigen_qr(A):
+    Ak = np.copy(A)
+    n = Ak.shape[0]
+    QQ = np.eye(n)
+    for k in range(50000):
+        s = Ak.item(n-1, n-1)
+        smult = s * np.eye(n)
+        Q, R = np.linalg.qr(np.subtract(Ak, smult))
+        Ak = np.add(R @ Q, smult)
+    return Ak
+
 
 # M1 = [[(i+1) for i in range(3)] for j in range(3)]
 # M2 = [[(i+j) for i in range(3)] for j in range(3)]
