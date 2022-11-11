@@ -42,14 +42,7 @@ int_img = []
 int_img = contol.Parser('./test/pins_Adriana/*.jpg')
 
 
-MATRIX = [[0 for i in range(256)] for j in range (256)]
-
-def jumlahMatrix(M1, M2):
-    M = [[0 for i in range(len(M1))] for j in range(len(M2))]
-    for i in range (len(M1)):
-        for j in range(len(M1)):
-            M[i][j] = M1[i][j] + M2[i][j]
-    return M
+MATRIX = np.zeros((256,256))
 
 def displayMatrix (M):
     for i in range(0, len(M)):
@@ -57,68 +50,42 @@ def displayMatrix (M):
             print(M[i][j], end=" ")
         print(" ")
 
-def kaliMatrix (M1, M2):
-    M = [[0 for i in range (len(M1))]for j in range(len(M2))]
-    for i in range (len(M1)):
-        for j in range (len(M1)):
-            for k in range (len(M1)):
-                M[i][j] += M1[i][k] * M2[k][j]
-    return M
-
-def kaliMatrixWithConst (const, M):
-    for i in range(0, len(M)):
-        for j in range (0, len(M)):
-            M[i][j] *= const
-
-def penguranganMatrix (M1, M2):
-    hasil = [[0 for i in range(len(M1))] for j in range (len(M2))]
-    for i in range(len(M1)):
-        for j in range(len(M2)):
-            hasil[i][j] = M1[i][j] - M2[i][j]
-    return hasil
-
 
 def meanMatrix (Dataset):
-    M = [[0 for i in range(len(Dataset[0]))] for j in range(len(Dataset[0]))]
+    M = np.zeros((256,256))
     for i in range (len(Dataset)):
-        M = jumlahMatrix(M,Dataset[i])
-    # displayMatrix(M)
-    n = (1/len(Dataset))
-    kaliMatrixWithConst(n, M)
-    return M
+        M = M + Dataset[i]
+    n = len(Dataset)
+    return M/n
     
-def selisihDenganMean (Dataset):
-    # MATRIX = [[0 for i in range(256)] for j in range (256)]
-    DataSelisih =  [MATRIX for i in range(len(Dataset))]
-    mean = meanMatrix(Dataset)
-    for i in range(len(Dataset)):
-        DataSelisih[i] = penguranganMatrix(Dataset[i], mean)
-    return DataSelisih
+# def selisihDenganMean (Dataset):
+#     DataSelisih =  []
+#     mean = meanMatrix(Dataset)
+#     for i in range(len(Dataset)):
+#         DataSelisih.append((Dataset[i] - mean))
+#     return DataSelisih
 
-def Tranpose (M):
-    hasil = [[0 for i in range(len(M))] for j in range(len(M[0]))]
-    for i in range (len(M)):
-        for j in range (len(M[0])):
-            hasil[i][j] = M[j][i]
-    return hasil
 
 def Covarian (Dataset):
     # MATRIX = [[0 for i in range(256)] for j in range (256)]
     AVG = meanMatrix(Dataset)
     Cov = []
-    for i in range(len(Dataset)):
-        X = penguranganMatrix(Dataset[i], AVG)
-        Cov.append(kaliMatrix(X, Tranpose(X)))
+    n = len(Dataset)
+    for i in range(n):
+        X = Dataset[i] - AVG
+        Cov.append((X @ np.transpose(X)))
+        # X = penguranganMatrix(Dataset[i], AVG)
+        # Cov.append(kaliMatrix(X, np.transpose(X)))
 
-    Cov = meanMatrix(Covarian)
+    Cov = meanMatrix(Cov)
 
     return Cov
 
 def eigen_qr(A):
     Ak = np.copy(A)
-    n = Ak.shape[0]
+    n = len(Ak)
     QQ = np.eye(n)
-    for k in range(50000):
+    for k in range(500):
         s = Ak.item(n-1, n-1)
         smult = s * np.eye(n)
         Q, R = np.linalg.qr(np.subtract(Ak, smult))
@@ -126,16 +93,11 @@ def eigen_qr(A):
     return Ak
 
 
-# M1 = [[(i+1) for i in range(3)] for j in range(3)]
-# M2 = [[(i+j) for i in range(3)] for j in range(3)]
-# M3 = [[(i+3*j) for i in range(3)] for j in range(3)]
-# displayMatrix(M1)
-# displayMatrix(M2)
-# print(M2 + M1)
-# displayMatrix(M3)
-# fak = [M1, M2, M3]
-# X = Covarian(int_img)
+
+X = Covarian(int_img)
 # displayMatrix(X)
+print(eigen_qr(X))
+print(np.linalg.eigvals(X))
 # X = np.array(X, dtype= np.uint8)
 # cv.imshow("kontol", X)
 # cv.waitKey(0)
