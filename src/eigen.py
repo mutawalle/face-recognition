@@ -81,23 +81,23 @@ def Covarian (Dataset):
 
     return Cov
 
+
 def eigen_qr(A):
-    Ak = np.copy(A)
-    n = len(Ak)
-    QQ = np.eye(n)
-    for k in range(500):
-        s = Ak.item(n-1, n-1)
-        smult = s * np.eye(n)
-        Q, R = np.linalg.qr(np.subtract(Ak, smult))
-        Ak = np.add(R @ Q, smult)
-    return Ak
+    Ai, Q = hessenberg(A, calc_q=True)
+    for i in range(5000):
+        Q, R = np.linalg.qr(Ai)
+        Ai = R @ Q
+    eigenVals = []
+    for j in range (len(A)):
+        eigenVals.append(Ai[j][j])
+    return eigenVals
 
 
 
 X = Covarian(int_img)
 # displayMatrix(X)
 print(eigen_qr(X))
-print(np.linalg.eigvals(X))
+# print(np.linalg.eigvals(X))
 # X = np.array(X, dtype= np.uint8)
 # cv.imshow("kontol", X)
 # cv.waitKey(0)
