@@ -4,103 +4,89 @@ import cv2 as cv
 import numpy as np
 from scipy.linalg import hessenberg
 
-
-# def Mat2vec (Matrix):
-#     return Matrix.flatten()
-
-# def Vec2Mat (Vector):
-#     return Vector.reshape(int(len(Vector)**(1/2)), int(len(Vector)**(1/2)))
-
-# Matrix = [[(i+j) for i in range (10)] for j in range (10)]
-# V1 = np.arange(9)
-# V2 = np.arange(9)
-# # Matrix = np.array(Matrix)
-# # print (Matrix)
-# # print(Mat2vec(Matrix))
-
-
-# def jumlahVec(V1, V2):
-#     V = [0 for i in range(len(V1))]
-#     for i in range(len(V1)):
-#         V[i] = V1[i] + V2[i]
-#     return V
-
-
-# def mean(Dataset):
-#     # array = [0 for i in range(256**2)]
-#     VecData = [array for i in range(len(Dataset))]
-#     for i in range(len(Dataset)):
-#         VecData[i] = Mat2vec(Dataset[i])
-#     Vecjumlah = [0 for i in range(256**2)]
-#     for i in range(len(VecData)):
-#         Vecjumlah = jumlahVec(Vecjumlah, VecData[i])
-#     for i in range(len(Vecjumlah)):
-#         Vecjumlah[i] = Vecjumlah[i]/len(Dataset)
-#     return Vecjumlah
-
 int_img = []
 int_img = contol.Parser('./test/pins_Adriana/*.jpg')
 
+def Mat2vec (Matrix):
+    return Matrix.flatten()
 
-MATRIX = np.zeros((256,256))
+def Vec2Mat (Vector):
+    return Vector.reshape(int(len(Vector)**(1/2)), int(len(Vector)**(1/2)))
 
-def displayMatrix (M):
-    for i in range(0, len(M)):
-        for j in range (0, len(M)):
-            print(M[i][j], end=" ")
-        print(" ")
+def convertGambar (Dataset):
+    vec = []
+    for i in range(len(Dataset)):
+        vec.append(Dataset[i].flatten())
+    return vec
 
-
-def meanMatrix (Dataset):
-    M = np.zeros((256,256))
-    for i in range (len(Dataset)):
-        M = M + Dataset[i]
+def Average (Dataset):
     n = len(Dataset)
-    return M/n
-    
-# def selisihDenganMean (Dataset):
-#     DataSelisih =  []
-#     mean = meanMatrix(Dataset)
-#     for i in range(len(Dataset)):
-#         DataSelisih.append((Dataset[i] - mean))
-#     return DataSelisih
+    Vec = convertGambar(Dataset)
+    mean = [0.0 for i in range(65536)]
+    for i in range(len(Vec)):
+        mean = mean + Vec[i]
+    return (mean/n)
 
+def selisihdenganAVG (Dataset):
+    Vec = convertGambar(Dataset)
+    avg = Average(Dataset)
+    DataSelisih = []
+    for i in range(len(Vec)):
+        DataSelisih.append(Vec[i] - avg)
+    return DataSelisih
 
-def Covarian (Dataset):
-    # MATRIX = [[0 for i in range(256)] for j in range (256)]
-    AVG = meanMatrix(Dataset)
-    Cov = []
-    n = len(Dataset)
-    for i in range(n):
-        X = Dataset[i] - AVG
-        Cov.append((X @ np.transpose(X)))
-        # X = penguranganMatrix(Dataset[i], AVG)
-        # Cov.append(kaliMatrix(X, np.transpose(X)))
-
-    Cov = meanMatrix(Cov)
-
-    return Cov
-
+def covarian (Dataset):
+    DataSelisih = selisihdenganAVG(Dataset)
+    DataSelisihTranspose = np.transpose(DataSelisih)
+    return DataSelisih @ DataSelisihTranspose 
 
 def eigen_qr(A):
     Ai, Q = hessenberg(A, calc_q=True)
+    QQ = np.eye(len(A))
     for i in range(5000):
         Q, R = np.linalg.qr(Ai)
         Ai = R @ Q
-    eigenVals = []
-    for j in range (len(A)):
-        eigenVals.append(Ai[j][j])
-    return eigenVals
+        QQ = QQ @ Q
+    eigenVals = np.diag(Ai)
+    return eigenVals, QQ
 
 
 
-X = Covarian(int_img)
-# displayMatrix(X)
-print(eigen_qr(X))
-# print(np.linalg.eigvals(X))
-# X = np.array(X, dtype= np.uint8)
-# cv.imshow("kontol", X)
+def eigenface (Dataset):
+    DataSelisih = selisihdenganAVG(Dataset)
+    eigenval, eigenvec = np.linalg.eig(covarian(Dataset))
+    # eigenvec = np.transpose(eigenvec)
+    eigenFace = []
+    for i in range(len(Dataset)):
+        X = [0.0 for i in range(65536)]
+        for k in range(len(Dataset)):
+            X = X + (eigenvec[i][k] * DataSelisih[k])
+        X = Vec2Mat(X)
+        eigenFace.append(X)
+    return eigenFace
+
+
+# DataSelisih = selisihdenganAVG(int_img)
+X = eigenface(int_img)
+for image in X:
+    image = np.array(image, dtype= np.uint8)
+    # image_int_data= imread(image)
+    cv.imshow('Image', image)
+    cv.waitKey(0)
+cv.destroyAllWindows()
+# print(X[0])
+# cv.imshow("kontol", X[0])
 # cv.waitKey(0)
+
+
+
+
+
+
+
+
+
+
 
 
 
