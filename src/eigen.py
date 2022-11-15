@@ -4,7 +4,7 @@ import cv2 as cv
 import numpy as np
 from scipy.linalg import hessenberg
 
-int_img = []
+
 int_img = contol.Parser('./test/pins_Adriana/*.jpg')
 
 def Mat2vec (Matrix):
@@ -22,8 +22,8 @@ def convertGambar (Dataset):
 def Average (Dataset):
     n = len(Dataset)
     Vec = convertGambar(Dataset)
-    mean = [0.0 for i in range(65536)]
-    for i in range(len(Vec)):
+    mean = Vec[0]
+    for i in range(1,len(Vec)):
         mean = mean + Vec[i]
     return (mean/n)
 
@@ -54,7 +54,7 @@ def eigen_qr(A):
 
 def eigenface (Dataset):
     DataSelisih = selisihdenganAVG(Dataset)
-    eigenval, eigenvec = np.linalg.eig(covarian(Dataset))
+    eigenval, eigenvec = eigen_qr(covarian(Dataset))
     # eigenvec = np.transpose(eigenvec)
     eigenFace = []
     for i in range(len(Dataset)):
@@ -73,25 +73,7 @@ for image in X:
     # image_int_data= imread(image)
     cv.imshow('Image', image)
     cv.waitKey(0)
-cv.destroyAllWindows()
+# cv.destroyAllWindows()
 # print(X[0])
 # cv.imshow("kontol", X[0])
 # cv.waitKey(0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 

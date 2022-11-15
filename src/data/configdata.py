@@ -55,6 +55,7 @@ def camera_use():
 
 # Parser(ImagePath)
 
+
 # for image in int_img:
 #     # image_int_data= imread(image)
 #     cv.imshow('Image', image)
