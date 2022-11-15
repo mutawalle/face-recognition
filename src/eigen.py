@@ -23,7 +23,7 @@ def Average (Dataset):
     n = len(Dataset)
     Vec = convertGambar(Dataset)
     mean = [0.0 for i in range(65536)]
-    for i in range(len(Vec)):
+    for i in range(0,len(Vec)):
         mean = mean + Vec[i]
     return (mean/n)
 
@@ -73,7 +73,7 @@ for image in X:
     # image_int_data= imread(image)
     cv.imshow('Image', image)
     cv.waitKey(0)
-cv.destroyAllWindows()
+# cv.destroyAllWindows()
 # print(X[0])
 # cv.imshow("kontol", X[0])
 # cv.waitKey(0)
