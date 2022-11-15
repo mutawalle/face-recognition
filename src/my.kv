@@ -35,6 +35,7 @@
                         font_size: 12
                         color: 15/255, 23/255, 42/255, 1
                     TextInput:
+                        id: input_folder
                         background_normal: "assets/background_textbox.png"
                         background_active: "assets/background_textbox.png"
                         foreground_color: 15/255,15/255,15/255,1
@@ -88,6 +89,7 @@
                     font_name: 'fonts/Poppins-SemiBold.ttf'
                     background_color: 0,0,0,0
                     background_normal: ""
+                    on_press: root.press_check()
                     canvas.before:
                         Color: 
                             rgba: 22/255,163/255,74/255,1

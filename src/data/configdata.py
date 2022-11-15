@@ -13,11 +13,11 @@ cv_img = []
 
 def Parser(path):
     int_img= []
-    DirPath = os.path.abspath(path)
-    print(DirPath)
+    DirPath = path
     File= glob.glob(DirPath)
     for file in File:
         img= cv.imread(file)
+        print(file)
         img_resize= cv.resize(img,(256,256))
         cv_img.append(img_resize)
         grayscale_img= cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
@@ -67,17 +67,19 @@ def camera_use():
 
 #Minimum eigen distance
 def min_eigen_distance(List_of_vector, input_vector):
-    min_distance= 0
+    min_distance = 0
+    indeks = 0
     for i in range (len(List_of_vector)):
         min= np.subtract(List_of_vector[i], input_vector)
         min_distance_temp= np.linalg.norm(min)
         if(min_distance > min_distance_temp):
             min_distance= min_distance_temp
-            indeks= i 
+            indeks = i 
     return indeks
 
 #Go through image database and return matrix that is pointed by the given indeks
 def choose_image(indeks):
     return cv_img[indeks]
+
 
 
