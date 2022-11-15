@@ -22,8 +22,8 @@ def convertGambar (Dataset):
 def Average (Dataset):
     n = len(Dataset)
     Vec = convertGambar(Dataset)
-    mean = Vec[0]
-    for i in range(1,len(Vec)):
+    mean = [0.0 for i in range(65536)]
+    for i in range(0,len(Vec)):
         mean = mean + Vec[i]
     return (mean/n)
 
@@ -67,12 +67,17 @@ def eigenface (Dataset):
 
 
 # DataSelisih = selisihdenganAVG(int_img)
-X = eigenface(int_img)
-for image in X:
-    image = np.array(image, dtype= np.uint8)
-    # image_int_data= imread(image)
-    cv.imshow('Image', image)
-    cv.waitKey(0)
+
+X = Average(int_img)
+X = Vec2Mat(X)
+X = np.array(X, dtype= np.uint8)
+cv.imshow('Image', X)
+cv.waitKey(0)
+# for image in X:
+#     image = np.array(image, dtype= np.uint8)
+#     # image_int_data= imread(image)
+#     cv.imshow('Image', image)
+#     cv.waitKey(0)
 # cv.destroyAllWindows()
 # print(X[0])
 # cv.imshow("kontol", X[0])
