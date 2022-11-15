@@ -56,6 +56,7 @@ def camera_use():
 
 # Parser('c:/Users/HP/Documents/Koding/Algeo02-21054/test/*.jpg')
 
+
 # for image in int_img:
 #     # image_int_data= imread(image)
 #     cv.imshow('Image', image)
