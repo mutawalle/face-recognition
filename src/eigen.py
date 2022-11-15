@@ -67,12 +67,12 @@ def eigenface (Dataset):
 
 
 # DataSelisih = selisihdenganAVG(int_img)
-X = eigenface(int_img)
-for image in X:
-    image = np.array(image, dtype= np.uint8)
-    # image_int_data= imread(image)
-    cv.imshow('Image', image)
-    cv.waitKey(0)
+# X = eigenface(int_img)
+# for image in X:
+#     image = np.array(image, dtype= np.uint8)
+#     # image_int_data= imread(image)
+#     cv.imshow('Image', image)
+#     cv.waitKey(0)
 # cv.destroyAllWindows()
 # print(X[0])
 # cv.imshow("kontol", X[0])

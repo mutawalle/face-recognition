@@ -14,10 +14,9 @@ cv_img = []
 def Parser(path):
     int_img= []
     DirPath = path
-    File= glob.glob(DirPath)
+    File = glob.glob(DirPath)
     for file in File:
         img= cv.imread(file)
-        print(file)
         img_resize= cv.resize(img,(256,256))
         cv_img.append(img_resize)
         grayscale_img= cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
