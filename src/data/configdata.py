@@ -80,3 +80,4 @@ def min_eigen_distance(List_of_vector, input_vector):
 def choose_image(indeks):
     return cv_img[indeks]
 
+
