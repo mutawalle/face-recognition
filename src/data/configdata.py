@@ -24,7 +24,7 @@ def Parser(path):
     return int_img
 
 def camera_use():
-    cam= cv.VideoCapture(0) #Start Camera
+    cam = cv.VideoCapture(0) #Start Camera
     cv.namedWindow("Camera") #Windows Title
     img_counter= 0
     end= False
@@ -53,7 +53,7 @@ def camera_use():
     cam.release() #Release Camera
     cv.destroyAllWindows() #Close All Opened Windows
 
-# Parser(ImagePath)
+# Parser('c:/Users/HP/Documents/Koding/Algeo02-21054/test/*.jpg')
 
 # for image in int_img:
 #     # image_int_data= imread(image)

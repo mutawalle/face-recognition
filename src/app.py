@@ -1,4 +1,5 @@
 import os
+import data.configdata as cd
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
@@ -33,8 +34,26 @@ class Root(Widget):
     
     def load(self, filename):
         self.ids.test_image.source = filename[0]
-
+        print(filename[0])
         self.dismiss_popup()
+
+    def use_camera(self):
+        cd.camera_use()
+        path = self.getRootPath("/test/get_data/cap_cam_0.jpg")
+        self.ids.test_image.source = path
+
+
+    def getRootPath(self, filePath):
+        path = os.path.abspath(os.curdir)
+        pathDir = list(filePath)
+        pjg = len(pathDir)
+        for i in range(pjg):
+            if(pathDir[i] == '/'):
+                pathDir[i] = chr(92)
+        pathDir = "".join(pathDir)
+        path += pathDir
+        return path
+
 
 
 class MyApp(App):
