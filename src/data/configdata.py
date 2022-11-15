@@ -1,6 +1,7 @@
 import os
 import cv2 as cv
 import glob
+import numpy as np
 import time
 import datetime
 
@@ -31,13 +32,13 @@ def camera_use():
     while  not end:
         total_time= 100
         while total_time>=10:
-            ret, frame= cam.read()
+            ret, frame= cam.read() #reading
             if(not ret):
                 print("Failed to proccess..")
                 break
             cv.imshow("Display", frame) #Showing camera
             total_time-=1
-            if(cv.waitKey(125) == ord('q')):
+            if(cv.waitKey(125) == ord('q')): #Escape key= q
                 end= True
                 break
         else:
@@ -62,3 +63,20 @@ def camera_use():
 # cv.destroyAllWindows()
 
 # camera_use()
+
+
+#Minimum eigen distance
+def min_eigen_distance(List_of_vector, input_vector):
+    min_distance= 0
+    for i in range (len(List_of_vector)):
+        min= np.subtract(List_of_vector[i], input_vector)
+        min_distance_temp= np.linalg.norm(min)
+        if(min_distance > min_distance_temp):
+            min_distance= min_distance_temp
+            indeks= i 
+    return indeks
+
+#Go through image database and return matrix that is pointed by the given indeks
+def choose_image(indeks):
+    return cv_img[indeks]
+
