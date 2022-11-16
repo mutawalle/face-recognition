@@ -1,11 +1,13 @@
 #MATRIX PASTI PERSEGI 256 kali 256 !1!1!1
-import data.configdata as contol
 import cv2 as cv
 import numpy as np
 from scipy.linalg import hessenberg
+import glob
 
-int_img = []
-int_img = contol.Parser('./test/pins_Adriana/*.jpg')
+# int_img = []
+# int_img = contol.Parser('./test/pins_Adriana/*.jpg')
+# ImagePath = './test/pins_Adriana/*.jpg'
+filePath = "C:/Users/HP/Documents/Koding/Algeo02-21054/test/pins_Adriana/Adriana Lima0_0.jpg"
 
 def Mat2vec (Matrix):
     return Matrix.flatten()
@@ -78,6 +80,15 @@ def eigenface (Dataset):
 # cv.imshow("kontol", X[0])
 # cv.waitKey(0)
 
+# img = cv.imread(filePath)
+
+# print(glob.glob(ImagePath)[x])
+# img = cv.imread(filePath)
+# img_resize = cv.resize(img,(256,256))
+# grayscale_img = cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
+# list = []
+# list.append(grayscale_img)
+# print(convertGambar(eigenface(grayscale_img)))
 
 
 

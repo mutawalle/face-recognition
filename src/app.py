@@ -1,5 +1,8 @@
 import os
+import glob
+import cv2 as cv
 import data.configdata as cd
+import eigen
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
@@ -43,6 +46,7 @@ class Root(Widget):
         cd.camera_use()
         path = self.getRootPath("/test/get_data/cap_cam_0.jpg")
         self.ids.test_image.source = path
+        self.file = path
 
     def getRootPath(self, filePath):
         path = os.path.abspath(os.curdir)
@@ -56,10 +60,17 @@ class Root(Widget):
         return path
 
     def press_check(self):
+        list1Input = []
         path = self.ids.input_folder.text+chr(92)+"*.jpg"
         int_img = cd.Parser(path)
-        print(path)
-        print(self.file)
+        listNamafile = glob.glob(path)
+        img = cv.imread(self.file)
+        img_resize = cv.resize(img,(256,256))
+        grayscale_img = cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
+        list1Input.append(grayscale_img)
+        x = cd.min_eigen_distance(eigen.convertGambar(eigen.eigenface(int_img)), eigen.convertGambar(eigen.eigenface(list1Input))[0])
+        self.ids.result_image.source = listNamafile[x]
+
 
 
 
