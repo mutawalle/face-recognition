@@ -10,7 +10,8 @@ import glob
 filePath = "C:/Users/HP/Documents/Koding/Algeo02-21054/test/pins_Adriana/Adriana Lima0_0.jpg"
 
 def Mat2vec (Matrix):
-    return Matrix.flatten()
+    matrix= np.transpose(Matrix)
+    return matrix.flatten()
 
 def Vec2Mat (Vector):
     return Vector.reshape(int(len(Vector)**(1/2)), int(len(Vector)**(1/2)))
@@ -18,7 +19,7 @@ def Vec2Mat (Vector):
 def convertGambar (Dataset):
     vec = []
     for i in range(len(Dataset)):
-        vec.append(Dataset[i].flatten())
+        vec.append(Mat2vec(Dataset[i]))
     return vec
 
 def Average (Dataset):
@@ -67,12 +68,27 @@ def eigenface (Dataset):
             X = X + (eigenvec[i][k] * DataSelisih[k])
         # X = Vec2Mat(X)
         eigenFace.append(X)
-    length = len(eigenFace)
-    print("eigenface")
-    print(length)
-    print(eigenFace[0])
-    print(eigenFace[length-1])
-    return eigenFace
+    return np.transpose(eigenFace)
+
+# Get eigen distance from one image
+def get_eigen_distance(eigen_face, vector, average):
+    dif_with_avg= np.subtract(vector, average)
+    distance= dif_with_avg @ eigen_face
+    distance= np.linalg.norm(distance)
+    return distance
+
+# Get minimal eigen distance from difference between input image and dataset
+def min_eigen_distance(data_set_eigen_distance, input_eigen_distance, eigen_face, average):
+    data= get_eigen_distance(eigen_face, data_set_eigen_distance[0], average)
+    min= abs(input_eigen_distance - data)
+    indeks= 0
+    for i in range(len(data_set_eigen_distance)):
+        data= get_eigen_distance(eigen_face, data_set_eigen_distance[i], average)
+        min_temp= abs(input_eigen_distance-data)
+        if(min > min_temp):
+            min= min_temp
+            indeks= i
+    return indeks
 
 
 # DataSelisih = selisihdenganAVG(int_img)
@@ -87,14 +103,32 @@ def eigenface (Dataset):
 # cv.imshow("kontol", X[0])
 # cv.waitKey(0)
 
-def input_eigen_face(vector_input, Dataset):
-    eigenval, eigenvector= eigen_qr(Dataset)
-    average= Average(Dataset)
-    new_eigen = eigenvector @ vector_input - average
-    return new_eigen
+# def input_eigen_face(vector_input, Dataset):
+#     eigenval, eigenvector= eigen_qr(Dataset)
+#     average= Average(Dataset)
+#     new_eigen = eigenvector @ vector_input - average
+#     return new_eigen
 
-
-
+# # Example Using
+# # test case 
+# input_img= './test/pins_Adriana/Adriana Lima10_2.jpg' 
+# # input_img= './test/get_data/adrianna_lima.jpg'
+# # eigenface
+# face= eigenface(int_img) 
+# # average
+# average= Average(int_img) 
+# # parser input photo
+# gray_img= contol.parser_one_file(input_img) 
+# # input eigen distance
+# input_eigen_distance= get_eigen_distance(face, Mat2vec(gray_img), average)
+# # data set after convert to vector
+# data_set_eigen_distance= convertGambar(int_img)
+# # minimal eigen distance
+# indeks= min_eigen_distance(data_set_eigen_distance, input_eigen_distance, face, average)
+# # output
+# cv.imshow("gambar", contol.choose_image(indeks))
+# cv.waitKey(0)
+# cv.destroyAllWindows()
 
 
 
