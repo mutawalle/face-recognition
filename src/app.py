@@ -66,13 +66,10 @@ class Root(Widget):
         img = cv.imread(self.file)
         img_resize = cv.resize(img,(256,256))
         grayscale_img = cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
-        int_img.append(grayscale_img)
-        length = len(int_img)
-        print("parser")
-        print(length)
-        print(int_img[0])
-        print(int_img[length-1])
-        x = cd.min_eigen_distance(eigen.convertGambar(eigen.eigenface(int_img)))
+
+        vektorInput = eigen.Mat2vec(grayscale_img)
+        hasilEigen = eigen.eigenface(int_img)
+        x = cd.min_eigen_distance(hasilEigen, eigen.input_eigen_face(vektorInput, int_img))
         self.ids.result_image.source = listNamafile[x]
 
 
