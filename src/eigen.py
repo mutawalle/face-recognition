@@ -54,7 +54,7 @@ def eigen_qr(A):
 
 def eigenface (Dataset):
     DataSelisih = selisihdenganAVG(Dataset)
-    eigenval, eigenvec = np.linalg.eig(covarian(Dataset))
+    eigenval, eigenvec = eigen_qr(covarian(Dataset))
     # eigenvec = np.transpose(eigenvec)
     eigenFace = []
     for i in range(len(Dataset)):
