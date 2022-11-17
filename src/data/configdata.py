@@ -16,11 +16,7 @@ def Parser(path):
     DirPath = path
     File = glob.glob(DirPath)
     for file in File:
-        img = cv.imread(file)
-        img_resize = cv.resize(img, (256, 256))
-        cv_img.append(img_resize)
-        grayscale_img = cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
-        int_img.append(grayscale_img)
+        int_img.append(parser_one_file(file))
     return int_img
 
 
@@ -66,25 +62,17 @@ def camera_use():
 
 # camera_use()
 
-
 #Minimum eigen distance
-def min_eigen_distance(List_of_vector):
+def min_eigen_distance(List_of_vector, input_vector):
+    min= np.subtract(List_of_vector[0], input_vector)
+    min_distance = np.linalg.norm(min)
     indeks = 0
-    length = len(List_of_vector)
-    min_distance = 0
-    print(length)
-    print(List_of_vector[0])
-    print(List_of_vector[length-1])
-    for i in range(length-1):
-        min = np.subtract(List_of_vector[i], List_of_vector[length-1])
-        min_distance_temp = np.linalg.norm(min)
-        if (i == 0):
-            min_distance = min_distance_temp
-            indeks = 0
-        else:
-            if (min_distance > min_distance_temp):
-                min_distance = min_distance_temp
-                indeks = i
+    for i in range (len(List_of_vector)-1):
+        min= np.subtract(List_of_vector[i], input_vector)
+        min_distance_temp= np.linalg.norm(min)
+        if(min_distance > min_distance_temp):
+            min_distance= min_distance_temp
+            indeks = i 
     return indeks
 
 
@@ -92,4 +80,11 @@ def min_eigen_distance(List_of_vector):
 def choose_image(indeks):
     return cv_img[indeks]
 
-# Parser(ImagePath)
+
+def parser_one_file(path):
+    img= cv.imread(path)
+    img_resize= cv.resize(img,(256,256))
+    cv_img.append(img_resize)
+    grayscale_img= cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
+    return grayscale_img
+

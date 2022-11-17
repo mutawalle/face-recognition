@@ -58,14 +58,14 @@ def eigen_qr(A):
 
 def eigenface (Dataset):
     DataSelisih = selisihdenganAVG(Dataset)
-    eigenval, eigenvec = np.linalg.eig(covarian(Dataset))
+    eigenval, eigenvec = eigen_qr(covarian(Dataset))
     # eigenvec = np.transpose(eigenvec)
     eigenFace = []
     for i in range(len(Dataset)):
         X = [0.0 for i in range(65536)]
         for k in range(len(Dataset)):
             X = X + (eigenvec[i][k] * DataSelisih[k])
-        X = Vec2Mat(X)
+        # X = Vec2Mat(X)
         eigenFace.append(X)
     length = len(eigenFace)
     print("eigenface")
@@ -87,15 +87,12 @@ def eigenface (Dataset):
 # cv.imshow("kontol", X[0])
 # cv.waitKey(0)
 
-# img = cv.imread(filePath)
+def input_eigen_face(vector_input, Dataset):
+    eigenval, eigenvector= eigen_qr(Dataset)
+    average= Average(Dataset)
+    new_eigen = eigenvector @ vector_input - average
+    return new_eigen
 
-# print(glob.glob(ImagePath)[x])
-# img = cv.imread(filePath)
-# img_resize = cv.resize(img,(256,256))
-# grayscale_img = cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
-# list = []
-# list.append(grayscale_img)
-# print(convertGambar(eigenface(grayscale_img)))
 
 
 
