@@ -15,33 +15,34 @@ def Vec2Mat (Vector):
     return Vector.reshape(int(len(Vector)**(1/2)), int(len(Vector)**(1/2)))
 
 def convertGambar (Dataset):
+    #mengubah sekumpulan dataset gambar menjadi list of vector
     vec = []
     for i in range(len(Dataset)):
         vec.append(Mat2vec(Dataset[i]))
     return vec
 
-def Average (Dataset):
-    n = len(Dataset)
-    Vec = convertGambar(Dataset)
+def Average (List_of_Vec):
+    #input : Matrix hasil convert gambar dari data set
+    n = len(List_of_Vec)
     mean = [0.0 for i in range(65536)]
-    for i in range(0,len(Vec)):
-        mean = mean + Vec[i]
+    for i in range(0,n):
+        mean = mean + List_of_Vec[i]
     return (mean/n)
 
-def selisihdenganAVG (Dataset):
-    Vec = convertGambar(Dataset)
-    avg = Average(Dataset)
+def selisihdenganAVG (Vec, avg):
+    #input Vec adalah list of vector hasil dari convert gambar (Vec = convertGambar(Dataset)), dan avg adalah rata2 dari dataset
     DataSelisih = []
     for i in range(len(Vec)):
         DataSelisih.append(Vec[i] - avg)
     return DataSelisih
 
-def covarian (Dataset):
-    DataSelisih = selisihdenganAVG(Dataset)
+def covarian (DataSelisih):
+    #DataSelisih adalah list of vector yang merupakan kumpulan vector yang sudah dikurangkan dengan rata2 dataset (DataSelisih = selisihdenganAVG)
     DataSelisihTranspose = np.transpose(DataSelisih)
     return DataSelisih @ DataSelisihTranspose 
 
 def eigen_qr(A):
+    #A adalah matrix sembarang, digunakan untuk menghitung eigen val dan eigen vec dari matrix covarian
     Ai, Q = hessenberg(A, calc_q=True)
     QQ = np.eye(len(A))
     for i in range(5000):
@@ -53,18 +54,20 @@ def eigen_qr(A):
 
 
 
-def eigenface (Dataset):
-    DataSelisih = selisihdenganAVG(Dataset)
-    eigenval, eigenvec = eigen_qr(covarian(Dataset))
+def eigenface (DataSelisih, Covarian):
+    #DataSelisih adalah list of vector yang merupakan kumpulan vector yang sudah dikurangkan dengan rata2 dataset (DataSelisih = selisihdenganAVG)
+    #Covarian adalah matrix covarian dari dataset
+    eigenval, eigenvec = eigen_qr(Covarian)
     # eigenvec = np.transpose(eigenvec)
     eigenFace = []
-    for i in range(len(Dataset)):
+    for i in range(len(DataSelisih)):
         X = [0.0 for i in range(65536)]
-        for k in range(len(Dataset)):
+        for k in range(len(DataSelisih)):
             X = X + (eigenvec[i][k] * DataSelisih[k])
         # X = Vec2Mat(X)
         eigenFace.append(X)
-    return np.transpose(eigenFace)
+    return eigenFace
+    # return np.transpose(eigenFace)
 
 # Get eigen distance from one image
 def get_eigen_distance(eigen_face, vector, average):
@@ -86,6 +89,17 @@ def min_eigen_distance(data_set_eigen_distance, input_eigen_distance, eigen_face
             indeks= i
     return indeks
 
+####### COntoh jika mau menacari eigen face ############
+# Vec = convertGambar(int_img)
+# avg = Average(convertGambar(int_img))
+# DataSelisih = selisihdenganAVG(Vec, avg)
+# Covarian = covarian(DataSelisih)
+# Face = eigenface(DataSelisih, Covarian)
+# for image in Face:
+#     image = np.array(image, dtype= np.uint8)
+#     image = Vec2Mat(image)
+#     cv.imshow('Image', image)
+#     cv.waitKey(0)
 
 # DataSelisih = selisihdenganAVG(int_img)
 # X = eigenface(int_img)
