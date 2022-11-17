@@ -60,15 +60,19 @@ class Root(Widget):
         return path
 
     def press_check(self):
-        list1Input = []
         path = self.ids.input_folder.text+chr(92)+"*.jpg"
         int_img = cd.Parser(path)
         listNamafile = glob.glob(path)
         img = cv.imread(self.file)
         img_resize = cv.resize(img,(256,256))
         grayscale_img = cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
-        list1Input.append(grayscale_img)
-        x = cd.min_eigen_distance(eigen.convertGambar(eigen.eigenface(int_img)), eigen.convertGambar(eigen.eigenface(list1Input))[0])
+        int_img.append(grayscale_img)
+        length = len(int_img)
+        print("parser")
+        print(length)
+        print(int_img[0])
+        print(int_img[length-1])
+        x = cd.min_eigen_distance(eigen.convertGambar(eigen.eigenface(int_img)))
         self.ids.result_image.source = listNamafile[x]
 
 

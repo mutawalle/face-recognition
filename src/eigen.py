@@ -35,10 +35,12 @@ def selisihdenganAVG (Dataset):
     DataSelisih = []
     for i in range(len(Vec)):
         DataSelisih.append(Vec[i] - avg)
+    length = len(DataSelisih)
     return DataSelisih
 
 def covarian (Dataset):
     DataSelisih = selisihdenganAVG(Dataset)
+    length = len(DataSelisih)
     DataSelisihTranspose = np.transpose(DataSelisih)
     return DataSelisih @ DataSelisihTranspose 
 
@@ -65,6 +67,11 @@ def eigenface (Dataset):
             X = X + (eigenvec[i][k] * DataSelisih[k])
         X = Vec2Mat(X)
         eigenFace.append(X)
+    length = len(eigenFace)
+    print("eigenface")
+    print(length)
+    print(eigenFace[0])
+    print(eigenFace[length-1])
     return eigenFace
 
 

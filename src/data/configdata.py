@@ -68,15 +68,17 @@ def camera_use():
 
 
 #Minimum eigen distance
-def min_eigen_distance(List_of_vector, input_vector):
-    min_distance = 0
+def min_eigen_distance(List_of_vector):
     indeks = 0
-    for i in range(len(List_of_vector)):
-        min = np.subtract(List_of_vector[i], input_vector)
+    length = len(List_of_vector)
+    min_distance = 0
+    print(length)
+    print(List_of_vector[0])
+    print(List_of_vector[length-1])
+    for i in range(length-1):
+        min = np.subtract(List_of_vector[i], List_of_vector[length-1])
         min_distance_temp = np.linalg.norm(min)
         if (i == 0):
-            print(List_of_vector[i])
-            print(input_vector)
             min_distance = min_distance_temp
             indeks = 0
         else:
