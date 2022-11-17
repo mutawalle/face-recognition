@@ -78,11 +78,11 @@ def eigenface (Dataset):
 # cv.imshow("kontol", X[0])
 # cv.waitKey(0)
 
-def input_eigen_face(vector_input, Dataset):
-    eigenval, eigenvector= eigen_qr(Dataset)
-    average= Average(Dataset)
-    new_eigen = eigenvector @ vector_input - average
-    return new_eigen
+# def input_eigen_face(vector_input, Dataset):
+#     eigenval, eigenvector= eigen_qr(Dataset)
+#     average= Average(Dataset)
+#     new_eigen = eigenvector @ vector_input - average
+#     return new_eigen
 
 
 
