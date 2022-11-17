@@ -61,8 +61,7 @@ def camera_use():
 # camera_use()
 
 #Minimum eigen distance
-def min_eigen_distance(List_of_vector):
-    input_vector= List_of_vector[len(List_of_vector)-1]
+def min_eigen_distance(List_of_vector, input_vector):
     min= np.subtract(List_of_vector[0], input_vector)
     min_distance = np.linalg.norm(min)
     indeks = 0

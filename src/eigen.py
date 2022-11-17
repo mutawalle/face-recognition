@@ -61,7 +61,7 @@ def eigenface (Dataset):
         X = [0.0 for i in range(65536)]
         for k in range(len(Dataset)):
             X = X + (eigenvec[i][k] * DataSelisih[k])
-        X = Vec2Mat(X)
+        # X = Vec2Mat(X)
         eigenFace.append(X)
     return eigenFace
 
@@ -77,6 +77,12 @@ def eigenface (Dataset):
 # print(X[0])
 # cv.imshow("kontol", X[0])
 # cv.waitKey(0)
+
+def input_eigen_face(vector_input, Dataset):
+    eigenval, eigenvector= eigen_qr(Dataset)
+    average= Average(Dataset)
+    new_eigen = eigenvector @ vector_input - average
+    return new_eigen
 
 
 
