@@ -8,9 +8,9 @@ import datetime
 # ImagePath= 'D:\\School\\Institut Teknologi Bandung\\Tahun 2\\Semester 1\\Linear Algebra dan Geometri\\Tugas Besar 2\\Algeo02-21054\\test\\pins_Adriana\\*.jpg'
 ImagePath= './test/pins_Adriana/*.jpg'
 
-cv_img = []
+cv_img = [] # Dataset for image
 
-
+# Parser file for folder
 def Parser(path):
     int_img= []
     DirPath = path
@@ -19,6 +19,8 @@ def Parser(path):
         int_img.append(parser_one_file(file))
     return int_img
 
+# Camera
+# Will automatically capture data every 10 second
 def camera_use():
     cam = cv.VideoCapture(0) #Start Camera
     cv.namedWindow("Camera") #Windows Title
@@ -60,24 +62,11 @@ def camera_use():
 
 # camera_use()
 
-#Minimum eigen distance
-def min_eigen_distance(List_of_vector, input_vector):
-    min= List_of_vector[0] @ input_vector
-    min_distance = np.linalg.norm(min)
-    indeks = 0
-    for i in range (len(List_of_vector)-1):
-        min= List_of_vector[0] @ input_vector
-        min_distance_temp= np.linalg.norm(min)
-        if(min_distance > min_distance_temp):
-            min_distance= min_distance_temp
-            indeks = i 
-    return indeks
-
-#Go through image database and return matrix that is pointed by the given indeks
+# Go through image database and return matrix that is pointed by the given indeks
 def choose_image(indeks):
-    return cv_img[indeks]
+    return cv_img[indeks] # get image from data set
 
-
+# Parser only for one photo 
 def parser_one_file(path):
     img= cv.imread(path)
     img_resize= cv.resize(img,(256,256))
