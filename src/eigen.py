@@ -5,43 +5,56 @@ import numpy as np
 from scipy.linalg import hessenberg
 
 int_img = []
-int_img = contol.Parser('./test/pins_Adriana/*.jpg')
+int_img = contol.Parser('./test/database_classmate/*.jpg')
 
-def Mat2vec (Matrix):
-    matrix= np.transpose(Matrix)
-    return matrix.flatten()
+height= 256
+width= 256
+
+def Mat2vec (Matrix): # Change
+    matrix= np.array(Matrix, dtype='float64').flatten()
+    return matrix
 
 def Vec2Mat (Vector):
     return Vector.reshape(int(len(Vector)**(1/2)), int(len(Vector)**(1/2)))
 
-def convertGambar (Dataset):
+def convertGambar (Dataset): # Change
     #mengubah sekumpulan dataset gambar menjadi list of vector
     vec = []
     for i in range(len(Dataset)):
         vec.append(Mat2vec(Dataset[i]))
     return vec
 
-def Average (List_of_Vec):
-    #input : Matrix hasil convert gambar dari data set
+def Average (List_of_Vec): #Change
+    # input : Matrix hasil convert gambar dari data set
     n = len(List_of_Vec)
+    division= 1/n
     mean = [0.0 for i in range(65536)]
-    for i in range(0,n):
-        mean = mean + List_of_Vec[i]
-    return (mean/n)
+    for i in range (n):
+        mean = np.add(mean, List_of_Vec[i])
+    print(mean)
+    print(n)
+    return np.multiply(mean, division)
+    # mean_face= np.zeros((1, height*width))
+    # for i in List_of_Vec:
+    #     mean_face= np.add(mean_face, i)
+    # mean_face= np.divide(mean_face, float(len(List_of_Vec))).flatten()
+    # return mean_face
 
-def selisihdenganAVG (Vec, avg):
+def selisihdenganAVG (Vec, avg): # Change
     #input Vec adalah list of vector hasil dari convert gambar (Vec = convertGambar(Dataset)), dan avg adalah rata2 dari dataset
     DataSelisih = []
     for i in range(len(Vec)):
-        DataSelisih.append(Vec[i] - avg)
+        dif= np.subtract(Vec[i], avg)
+        DataSelisih.append(dif)
     return DataSelisih
 
-def covarian (DataSelisih):
+def covarian (DataSelisih): # Change
     #DataSelisih adalah list of vector yang merupakan kumpulan vector yang sudah dikurangkan dengan rata2 dataset (DataSelisih = selisihdenganAVG)
     DataSelisihTranspose = np.transpose(DataSelisih)
-    return DataSelisih @ DataSelisihTranspose 
+    multiple= DataSelisih @ DataSelisihTranspose 
+    return multiple / len(DataSelisih)
 
-def eigen_qr(A):
+def eigen_qr(A): # A is the result of eigenspace_data * transpose(eigenspace_data)
     #A adalah matrix sembarang, digunakan untuk menghitung eigen val dan eigen vec dari matrix covarian
     Ai, Q = hessenberg(A, calc_q=True)
     QQ = np.eye(len(A))
@@ -50,27 +63,92 @@ def eigen_qr(A):
         Ai = R @ Q
         QQ = QQ @ Q
     eigenVals = np.diag(Ai)
-    return eigenVals, QQ
+    return eigenVals, np.transpose(QQ)
 
-# Check eigen vector
-# eigenval, eigenvec= eigen_qr(covarian(selisihdenganAVG(convertGambar(int_img), Average(convertGambar(int_img)))))
-# print(np.shape(eigenvec))
+def magnitude(vector):
+    return np.linalg.norm(vector)
 
-def eigenface (DataSelisih, Covarian):
+def eigenface (Covarian): # Dataselisih is eigenspace after being substract with average of n vectors
     #DataSelisih adalah list of vector yang merupakan kumpulan vector yang sudah dikurangkan dengan rata2 dataset (DataSelisih = selisihdenganAVG)
     #Covarian adalah matrix covarian dari dataset
     eigenval, eigenvec = eigen_qr(Covarian)
     # eigenvec = np.transpose(eigenvec)
     # print(eigenvec)
     eigenFace = []
-    for i in range(len(DataSelisih)):
-        X = [0.0 for i in range(65536)]
-        for k in range(len(DataSelisih)):
-            X = X + (eigenvec[i][k] * DataSelisih[k])
-        # X = Vec2Mat(X)
-        eigenFace.append(X)
+    for i in range(len(eigenvec)):
+        divider= 1/magnitude(eigenvec[i])
+        eigenFace.append(np.multiply(eigenvec[i], divider))
     return eigenFace
-    return np.transpose(eigenFace)
+
+def get_weight(eigenface, dif_with_avg_vector):
+    weight_of_image= []
+    for i in range (len(eigenface)):
+        print(np.shape(dif_with_avg_vector))
+        print(np.shape(np.transpose(eigenface[i])))
+        weight_component = np.transpose(eigenface[i]) @ dif_with_avg_vector
+        weight_of_image.append(weight_component)
+    return weight_of_image
+
+def get_eigen_distance(weight_input, weight_data):
+    dif= np.subtract(weight_input, weight_data)
+    return np.linalg.norm(dif)
+
+def compare_distance(control_variable, free_variable): # free variable is a eigenspace
+    min= get_eigen_distance(control_variable, free_variable[0])
+    indeks= 0
+    for i in range (len(free_variable)):
+        min_temp= get_eigen_distance(control_variable, free_variable[i])
+        if(min > min_temp):
+            min= min_temp
+            indeks= i
+    return indeks
+
+def run_func (input_img_path, dataset_img_path):
+    input_mat= contol.parser_one_file(input_img_path)
+    # cv.imshow("Image", input_mat)
+    # cv.waitKey(0)
+    # cv.destroyAllWindows()
+    dataset_mat= contol.Parser(dataset_img_path)
+    # # for i in range (len(dataset_mat)):
+    # #     cv.imshow("Image", dataset_mat[i])
+    # #     cv.waitKey(0)
+    # # cv.destroyAllWindows()
+    vector_dataset= convertGambar(dataset_mat)
+    vector_input= Mat2vec(input_mat)
+    avg_dataset= Average(vector_dataset)
+    cv.imshow("Image", avg_dataset.reshape(256,256))
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+    # # avg_dataset= np.array(avg_dataset)
+    # # avg_dataset= Vec2Mat(avg_dataset)
+    # # cv.imshow("Image", avg_dataset)
+    # # cv.waitKey(0)
+    # # cv.destroyAllWindows()
+    # dif_with_avg= selisihdenganAVG(vector_dataset, avg_dataset)
+    # covarian_dataset= covarian(dif_with_avg)
+    # # print(np.shape(covarian_dataset))
+    # eigen_face= eigenface(covarian_dataset)
+    # print(np.shape(eigen_face))
+    # weight_of_data= []
+    # for i in range (len(dif_with_avg)):
+    #     weight_of_data.append(get_weight(eigen_face, dif_with_avg[i]))
+    # weight_of_input= get_weight(eigen_face, vector_input)
+    # indeks= compare_distance(weight_of_input, weight_of_data)
+    # cv.imshow("Image", contol.choose_image(indeks))
+    # cv.waitKey(0)
+    # cv.destroyAllWindows()
+    
+run_func('./test/get_data/IMG_5758.jpg', './test/database_classmate/*.jpg')
+    
+# Example Using
+# input
+# input_img= '.test/get_data/cap_cam_0.jpg'
+
+# cv.imshow("Image", input_img)
+# cv.waitKey(0)
+# cv.destroyAllWindows()
+# Selis
+
 
 # # Get eigen distance from one image
 # def get_eigen_distance(eigen_face, vector, average):
@@ -79,28 +157,33 @@ def eigenface (DataSelisih, Covarian):
 #     distance= np.linalg.norm(distance)
 #     return distance
 
-def get_input_eigen_face (eigen_vec, dif_with_avg):
-    X = [0.0 for i in range(65536)]
-    for i in range (len(dif_with_avg)):
-        X = X + (eigen_vec[i] * dif_with_avg)
-    return X
+# def get_input_eigen_face (eigen_vec, dif_with_avg):
+#     X = [0.0 for i in range(65536)]
+#     for i in range (len(dif_with_avg)):
+#         X = X + (eigen_vec[i] * dif_with_avg)
+#     return X
     
+# def get_eigen_distance(vector):
+#     return np.linalg.norm(vector)
 
+# # Get minimal eigen distance from difference between input image and dataset
+# def min_eigen_distance(eigen_face_input, eigen_face_data):
+#     dist_input= get_eigen_distance(eigen_face_input)
+#     dist_data= get_eigen_distance(eigen_face_data[0])
+#     data= dist_input- dist_data
+#     min= abs(data)
+#     indeks= 0
+#     for i in range(len(eigen_face_data)):
+#         dist_input= get_eigen_distance(eigen_face_input)
+#         dist_data= get_eigen_distance(eigen_face_data[i])
+#         data= dist_input- dist_data
+#         min_temp= abs(data)
+#         if(min > min_temp):
+#             min= min_temp
+#             indeks= i
+#     return indeks
 
-# Get minimal eigen distance from difference between input image and dataset
-def min_eigen_distance(eigen_face_input, eigen_face_data):
-    data= np.subtract(eigen_face_input, eigen_face_data)
-    min= abs(data)
-    indeks= 0
-    for i in range(len(eigen_face_data)):
-        data= np.subtract(eigen_face_input, eigen_face_data)
-        min_temp= abs(data)
-        if(min > min_temp):
-            min= min_temp
-            indeks= i
-    return indeks
-
-####### COntoh jika mau menacari eigen face ############
+# ###### COntoh jika mau menacari eigen face ############
 # Vec = convertGambar(int_img)
 # avg = Average(convertGambar(int_img))
 # DataSelisih = selisihdenganAVG(Vec, avg)
@@ -132,20 +215,22 @@ def min_eigen_distance(eigen_face_input, eigen_face_data):
 
 # # Example Using
 # # test case 
-# input_img= './test/pins_Adriana/Adriana Lima10_2.jpg' 
-# # input_img= './test/get_data/adrianna_lima.jpg'
+# # input_img= './test/pins_Adriana/Adriana Lima10_2.jpg' 
+# input_img= './test/get_data/adrianna_lima.jpg'
+# # Average
+# avg = Average(convertGambar(int_img))
+# # Difference with average
+# dif_with_avg= selisihdenganAVG(convertGambar(int_img), avg)
+# # Covarian
+# covarian_result= covarian(dif_with_avg)
 # # eigenface
-# face= eigenface(int_img) 
-# # average
-# average= Average(int_img) 
+# face= eigenface(dif_with_avg, covarian_result) 
 # # parser input photo
 # gray_img= contol.parser_one_file(input_img) 
-# # input eigen distance
-# input_eigen_distance= get_eigen_distance(face, Mat2vec(gray_img), average)
-# # data set after convert to vector
-# data_set_eigen_distance= convertGambar(int_img)
+# # Input photo vector eigen
+# eigen_face_input= get_input_eigen_face(Mat2vec(gray_img), dif_with_avg)
 # # minimal eigen distance
-# indeks= min_eigen_distance(data_set_eigen_distance, input_eigen_distance, face, average)
+# indeks= min_eigen_distance(eigen_face_input, face)
 # # output
 # cv.imshow("gambar", contol.choose_image(indeks))
 # cv.waitKey(0)

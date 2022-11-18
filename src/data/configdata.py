@@ -74,3 +74,7 @@ def parser_one_file(path):
     grayscale_img= cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
     return grayscale_img
 
+# img = parser_one_file('./test/pins_Adriana/Adriana Lima0_0.jpg')
+# cv.imshow("Image", img)
+# cv.waitKey(0)
+# cv.destroyAllWindows()
