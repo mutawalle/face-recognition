@@ -52,13 +52,16 @@ def eigen_qr(A):
     eigenVals = np.diag(Ai)
     return eigenVals, QQ
 
-
+# Check eigen vector
+# eigenval, eigenvec= eigen_qr(covarian(selisihdenganAVG(convertGambar(int_img), Average(convertGambar(int_img)))))
+# print(np.shape(eigenvec))
 
 def eigenface (DataSelisih, Covarian):
     #DataSelisih adalah list of vector yang merupakan kumpulan vector yang sudah dikurangkan dengan rata2 dataset (DataSelisih = selisihdenganAVG)
     #Covarian adalah matrix covarian dari dataset
     eigenval, eigenvec = eigen_qr(Covarian)
     # eigenvec = np.transpose(eigenvec)
+    # print(eigenvec)
     eigenFace = []
     for i in range(len(DataSelisih)):
         X = [0.0 for i in range(65536)]
@@ -67,23 +70,31 @@ def eigenface (DataSelisih, Covarian):
         # X = Vec2Mat(X)
         eigenFace.append(X)
     return eigenFace
-    # return np.transpose(eigenFace)
+    return np.transpose(eigenFace)
 
-# Get eigen distance from one image
-def get_eigen_distance(eigen_face, vector, average):
-    dif_with_avg= np.subtract(vector, average)
-    distance= dif_with_avg @ eigen_face
-    distance= np.linalg.norm(distance)
-    return distance
+# # Get eigen distance from one image
+# def get_eigen_distance(eigen_face, vector, average):
+#     dif_with_avg= np.subtract(vector, average)
+#     distance= dif_with_avg @ eigen_face
+#     distance= np.linalg.norm(distance)
+#     return distance
+
+def get_input_eigen_face (eigen_vec, dif_with_avg):
+    X = [0.0 for i in range(65536)]
+    for i in range (len(dif_with_avg)):
+        X = X + (eigen_vec[i] * dif_with_avg)
+    return X
+    
+
 
 # Get minimal eigen distance from difference between input image and dataset
-def min_eigen_distance(data_set_eigen_distance, input_eigen_distance, eigen_face, average):
-    data= get_eigen_distance(eigen_face, data_set_eigen_distance[0], average)
-    min= abs(input_eigen_distance - data)
+def min_eigen_distance(eigen_face_input, eigen_face_data):
+    data= np.subtract(eigen_face_input, eigen_face_data)
+    min= abs(data)
     indeks= 0
-    for i in range(len(data_set_eigen_distance)):
-        data= get_eigen_distance(eigen_face, data_set_eigen_distance[i], average)
-        min_temp= abs(input_eigen_distance-data)
+    for i in range(len(eigen_face_data)):
+        data= np.subtract(eigen_face_input, eigen_face_data)
+        min_temp= abs(data)
         if(min > min_temp):
             min= min_temp
             indeks= i
