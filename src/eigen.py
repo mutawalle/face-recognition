@@ -66,8 +66,13 @@ def face_reg_func(path_dataset, path_input):
     min = np.linalg.norm(weight_input - weight_dataset[0])
     indeks = 0
     for i in range(len(centered_data)):
-        min_temp = np.linalg.norm(weight_input - weight_dataset[i])
-        if (min > min_temp):
-            min = min_temp
-            indeks = i
-    return indeks
+        min_temp= np.linalg.norm(weight_input-weight_dataset[i])
+        if(min > min_temp):
+            min= min_temp
+            indeks= i
+    image= contol.choose_image(indeks)
+    cv.imshow("Image", image)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+        
+face_reg_func('./test/database_classmate/*.jpg', 'test\get_data\IMG_5754.jpg')

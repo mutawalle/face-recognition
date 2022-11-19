@@ -48,8 +48,6 @@ def camera_use():
                 cv.imwrite(img_name, frame)
                 print("Data Taken")
                 img_counter+=1
-                end= True
-                break
         else:
             ret, frame= cam.read()
             frame= cv.resize(frame, (256, 256))
@@ -62,9 +60,9 @@ def camera_use():
             if (cv.waitKey(125) == ord('q')):
                 end = True
                 break
-    cam.release()  #Release Camera
-    cv.destroyAllWindows()  #Close All Opened Windows
-
+    print("Closing Cam")
+    cam.release() #Release Camera
+    cv.destroyAllWindows() #Close All Opened Windows
 
 # Parser('c:/Users/HP/Documents/Koding/Algeo02-21054/test/*.jpg')
 
