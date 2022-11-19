@@ -68,4 +68,4 @@ def face_reg_func(path_dataset, path_input):
     cv.waitKey(0)
     cv.destroyAllWindows()
         
-face_reg_func('./test/database_classmate/*.jpg', 'test\get_data\IMG-20221117-WA0011.jpg')
+face_reg_func('./test/database_classmate/*.jpg', 'test\get_data\IMG_5754.jpg')
