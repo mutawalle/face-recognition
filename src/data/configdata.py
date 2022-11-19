@@ -60,7 +60,7 @@ def camera_use():
 #     cv.waitKey(0)
 # cv.destroyAllWindows()
 
-# camera_use()
+camera_use()
 
 # Go through image database and return matrix that is pointed by the given indeks
 def choose_image(indeks):
@@ -72,7 +72,7 @@ def parser_one_file(path):
     img_resize= cv.resize(img,(256,256))
     cv_img.append(img_resize)
     grayscale_img= cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
-    return grayscale_img
+    return grayscale_img.flatten()
 
 # img = parser_one_file('./test/pins_Adriana/Adriana Lima0_0.jpg')
 # cv.imshow("Image", img)
