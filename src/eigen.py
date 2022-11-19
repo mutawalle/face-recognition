@@ -71,6 +71,3 @@ def face_reg_func(path_dataset, path_input):
             min = min_temp
             indeks = i
     return indeks
-
-
-face_reg_func('./test/database_classmate/*.jpg', 'test\get_data\cap_cam_0.jpg')
