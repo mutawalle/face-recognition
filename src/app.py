@@ -22,14 +22,28 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 Window.size = (900,500)
 Builder.load_file('my.kv')
 
+class LoadDirDialog(FloatLayout):
+    loadDir = ObjectProperty(None)
+
 class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
 
 class Root(Widget):
     file = ObjectProperty(None)
+    dir = ObjectProperty(None)
 
     def dismiss_popup(self):
         self._popup.dismiss()
+
+    def show_load_dir(self):
+        content = LoadDirDialog(loadDir = self.load_dir)
+        self._popup = Popup(title="Load Dataset Folder", content=content,
+                            size_hint=(0.8, 0.8))
+        self._popup.open()
+    
+    def load_dir(self, filename):
+        self.dir = filename[0]
+        self.dismiss_popup()
 
     def show_load(self):
         content = LoadDialog(load=self.load)
@@ -60,16 +74,10 @@ class Root(Widget):
         return path
 
     def press_check(self):
-        path = self.ids.input_folder.text+chr(92)+"*.jpg"
-        int_img = cd.Parser(path)
+        path = self.dir+"/*.jpg"
         listNamafile = glob.glob(path)
-        img = cv.imread(self.file)
-        img_resize = cv.resize(img,(256,256))
-        grayscale_img = cv.cvtColor(img_resize, cv.COLOR_BGR2GRAY)
-
-        vektorInput = eigen.Mat2vec(grayscale_img)
-        hasilEigen = eigen.eigenface(int_img)
-        x = cd.min_eigen_distance(hasilEigen, eigen.input_eigen_face(vektorInput, int_img))
+        
+        x = eigen.face_reg_func(path, self.file)
         self.ids.result_image.source = listNamafile[x]
 
 

@@ -24,23 +24,40 @@
             FloatLayout:
                 size_hint: (.5, 1)
                 size: root.width, root.height
-                BoxLayout:
-                    orientation: "vertical"
+                # BoxLayout:
+                #     orientation: "vertical"
+                #     pos_hint: {"center_x": .5, "y": .8}
+                #     size_hint: (None,None)
+                #     size: (135, 70)
+                #     Label:
+                #         text: "Select Path Dataset"
+                #         font_name: 'fonts/Poppins-Medium.ttf'
+                #         font_size: 12
+                #         color: 15/255, 23/255, 42/255, 1
+                #     TextInput:
+                #         id: input_folder
+                #         background_normal: "assets/background_textbox.png"
+                #         background_active: "assets/background_textbox.png"
+                #         foreground_color: 15/255,15/255,15/255,1
+                #         font_name: 'fonts/Poppins-Medium.ttf'
+                #         multiline: False
+                Button:
                     pos_hint: {"center_x": .5, "y": .8}
-                    size_hint: (None,None)
-                    size: (135, 70)
-                    Label:
-                        text: "Input Path Dataset"
-                        font_name: 'fonts/Poppins-Medium.ttf'
-                        font_size: 12
-                        color: 15/255, 23/255, 42/255, 1
-                    TextInput:
-                        id: input_folder
-                        background_normal: "assets/background_textbox.png"
-                        background_active: "assets/background_textbox.png"
-                        foreground_color: 15/255,15/255,15/255,1
-                        font_name: 'fonts/Poppins-Medium.ttf'
-                        multiline: False
+                    size_hint: (None, None)
+                    size: (180,40)
+                    text: "Select Folder Dataset"
+                    font_size: 14
+                    font_name: 'fonts/Poppins-SemiBold.ttf'
+                    background_color: 0,0,0,0
+                    background_normal: ""
+                    canvas.before:
+                        Color: 
+                            rgba: 8/255,144/255,175/255,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [15]
+                    on_release: root.show_load_dir()
                 Button:
                     pos_hint: {"center_x": .5, "y": .6}
                     size_hint: (None, None)
@@ -108,6 +125,8 @@
                         size: (256, 256)
                         Image:
                             id: test_image
+                            allow_stretch: True
+                            keep_ratio: False
                             source: "assets/blank_image.png"
                             FloatLayout:
                                 size_hint: (None, None)
@@ -129,6 +148,8 @@
                         size: (256, 256)
                         Image:
                             id: result_image
+                            allow_stretch: True
+                            keep_ratio: False
                             source: "assets/blank_image.png"
                             FloatLayout:
                                 size_hint: (None, None)
@@ -142,7 +163,24 @@
                         font_size: 18
                         font_name: 'fonts/Poppins-Bold.ttf'
                         color: 50/255,50/255,50/255,1
-                        
+
+
+<LoadDirDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            path: "./"
+            dirselect: True
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Load"
+                on_release: root.loadDir(filechooser.selection)
                     
 
 <LoadDialog>:
