@@ -24,24 +24,35 @@ def Parser(path):
 # Camera
 # Will automatically capture data every 10 second
 def camera_use():
-    cam = cv.VideoCapture(0)  #Start Camera
-    cv.namedWindow("Camera")  #Windows Title
-    img_counter = 0
-    end = False
-    while not end:
-        total_time = 100
-        while total_time >= 10:
-            ret, frame = cam.read()  #reading
-            if (not ret):
+    cam = cv.VideoCapture(0) #Start Camera
+    cam.set(3, 1920) # Resolution 1080p
+    cam.set(4, 1080)
+    cv.namedWindow("Camera") #Windows Title
+    img_counter= 0
+    end= False
+    while  not end:
+        total_time= 100
+        while total_time>=10:
+            ret, frame= cam.read() #reading
+            if(not ret):
                 print("Failed to proccess..")
                 break
-            cv.imshow("Display", frame)  #Showing camera
-            total_time -= 1
-            if (cv.waitKey(125) == ord('q')):  #Escape key= q
-                end = True
+            frame= cv.resize(frame, (256, 256))
+            cv.imshow("Display", frame) #Showing camera
+            total_time-=1
+            if(cv.waitKey(125) == ord('q')): #Escape key= q
+                end= True
+                break
+            elif(cv.waitKey(125) == ord('s')):
+                img_name= "{}/cap_cam_{}.jpg".format('./test/get_data', img_counter) #Image Name
+                cv.imwrite(img_name, frame)
+                print("Data Taken")
+                img_counter+=1
+                end= True
                 break
         else:
-            ret, frame = cam.read()
+            ret, frame= cam.read()
+            frame= cv.resize(frame, (256, 256))
             cv.imshow("Display", frame)
             img_name = "{}/cap_cam_{}.jpg".format('./test/get_data',
                                                   img_counter)  #Image Name
