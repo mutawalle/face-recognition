@@ -70,9 +70,6 @@ def face_reg_func(path_dataset, path_input):
         if(min > min_temp):
             min= min_temp
             indeks= i
-    image= contol.choose_image(indeks)
-    cv.imshow("Image", image)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    return indeks
         
-face_reg_func('./test/database_classmate/*.jpg', 'test\get_data\IMG_5754.jpg')
+# face_reg_func('./test/database_classmate/*.jpg', 'test\get_data\IMG_5754.jpg')
