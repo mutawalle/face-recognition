@@ -28,7 +28,6 @@ def camera_use():
     cam.set(3, 1920) # Resolution 1080p
     cam.set(4, 1080)
     cv.namedWindow("Camera") #Windows Title
-    img_counter= 0
     end= False
     while  not end:
         total_time= 100
@@ -44,19 +43,18 @@ def camera_use():
                 end= True
                 break
             elif(cv.waitKey(125) == ord('s')):
-                img_name= "{}/cap_cam_{}.jpg".format('./test/get_data', img_counter) #Image Name
+                img_name= "{}/cap_cam_0.jpg".format('./test/get_data') #Image Name
                 cv.imwrite(img_name, frame)
                 print("Data Taken")
-                img_counter+=1
+                # img_counter+=1
         else:
             ret, frame= cam.read()
             frame= cv.resize(frame, (256, 256))
             cv.imshow("Display", frame)
-            img_name = "{}/cap_cam_{}.jpg".format('./test/get_data',
-                                                  img_counter)  #Image Name
+            img_name = "{}/cap_cam_0.jpg".format('./test/get_data')  #Image Name
             cv.imwrite(img_name, frame)
             print("Data Taken")
-            img_counter += 1
+            # img_counter += 1
             if (cv.waitKey(125) == ord('q')):
                 end = True
                 break
