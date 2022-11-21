@@ -24,23 +24,6 @@
             FloatLayout:
                 size_hint: (.5, 1)
                 size: root.width, root.height
-                # BoxLayout:
-                #     orientation: "vertical"
-                #     pos_hint: {"center_x": .5, "y": .8}
-                #     size_hint: (None,None)
-                #     size: (135, 70)
-                #     Label:
-                #         text: "Select Path Dataset"
-                #         font_name: 'fonts/Poppins-Medium.ttf'
-                #         font_size: 12
-                #         color: 15/255, 23/255, 42/255, 1
-                #     TextInput:
-                #         id: input_folder
-                #         background_normal: "assets/background_textbox.png"
-                #         background_active: "assets/background_textbox.png"
-                #         foreground_color: 15/255,15/255,15/255,1
-                #         font_name: 'fonts/Poppins-Medium.ttf'
-                #         multiline: False
                 Button:
                     pos_hint: {"center_x": .5, "y": .8}
                     size_hint: (None, None)
@@ -114,7 +97,14 @@
                             size: self.size
                             pos: self.pos
                             radius: [15]
-                    
+                Label:
+                    id: time_exec
+                    pos_hint: {"center_x": .5, "y": 0}
+                    size_hint: (None, None)
+                    text: "Time exec : "
+                    font_size: 12
+                    font_name: 'fonts/Poppins-Medium.ttf'
+                    color: 50/255,50/255,50/255,1
             GridLayout: 
                 cols: 2
                 FloatLayout:

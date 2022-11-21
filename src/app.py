@@ -1,23 +1,16 @@
 import os
+import time
 import glob
-import cv2 as cv
-import data.configdata as cd
+import configdata as cd
 import eigen
 from kivy.app import App
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivy.uix.button import Button
-from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 from kivy.uix.floatlayout import FloatLayout
 from kivy.core.window import Window
-from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
-from kivy.uix.screenmanager import Screen, ScreenManager
 
 Window.size = (900,500)
 Builder.load_file('my.kv')
@@ -76,8 +69,11 @@ class Root(Widget):
     def press_check(self):
         path = self.dir+"/*.jpg"
         listNamafile = glob.glob(path)
-        
+        y1 = time.time()
         x = eigen.face_reg_func(path, self.file)
+        y2 = time.time()
+        s = "Time execution : " + str(y2-y1) + " s"
+        self.ids.time_exec.text = s
         self.ids.result_image.source = listNamafile[x]
 
 

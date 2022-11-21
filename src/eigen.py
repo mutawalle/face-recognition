@@ -1,8 +1,6 @@
-import data.configdata as contol
-import cv2 as cv
+import configdata as cd
 import numpy as np
 from scipy.linalg import hessenberg
-import glob
 
 
 def Average(List_of_Vec):  #Change
@@ -13,11 +11,6 @@ def Average(List_of_Vec):  #Change
     for i in range(n):
         mean = np.add(mean, List_of_Vec[i])
     return np.multiply(mean, division)
-    # mean_face= np.zeros((1, height*width))
-    # for i in List_of_Vec:
-    #     mean_face= np.add(mean_face, i)
-    # mean_face= np.divide(mean_face, float(len(List_of_Vec))).flatten()
-    # return mean_face
 
 
 def selisihdenganAVG(Vec, avg):  # Change
@@ -47,10 +40,27 @@ def eigen_qr(
     eigenVals = np.diag(Ai)
     return eigenVals, np.transpose(QQ)
 
+def householder(a):
+    v = a/(a[0] + np.copysign(np.linalg.norm(a), a[0]))
+    v[0] = 1
+    H = np.eye(a.shape[0])
+    H -= (2/np.dot(v,v)) * np.dot(v[:, None], v[None, :])
+    return H
+
+def qr_decomposition (A):
+    m, n = A.shape
+    Q = np.eye(m)
+    for i in range(m - (m == n)):
+        H = np.eye(m)
+        H[i:, i:] = householder(A[i:,i])
+        Q = np.dot(Q,H)
+        A = np.dot(H,A)
+    return Q, A
+
 
 def face_reg_func(path_dataset, path_input):
-    vector_dataset = contol.Parser(path_dataset)
-    vector_input_img = contol.parser_one_file(path_input)
+    vector_dataset = cd.Parser(path_dataset)
+    vector_input_img = cd.parser_one_file(path_input)
     mean = Average(vector_dataset)
     centered_data = selisihdenganAVG(vector_dataset, mean)
     centered_data = np.array(centered_data)
@@ -71,5 +81,3 @@ def face_reg_func(path_dataset, path_input):
             min= min_temp
             indeks= i
     return indeks
-        
-# face_reg_func('./test/database_classmate/*.jpg', 'test\get_data\IMG_5754.jpg')
